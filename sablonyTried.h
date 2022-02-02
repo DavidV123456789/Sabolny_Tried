@@ -1,6 +1,9 @@
 //
 // Created by map on 1. 2. 2022.
 //
+#include<iostream>
+#include<cstdlib>
+
 
 #ifndef SABOLNY_TRIED_SABLONYTRIED_H
 #define SABOLNY_TRIED_SABLONYTRIED_H
@@ -34,4 +37,107 @@ auto Obdlznik<Any,Other,pocet>::getObvod1() -> decltype(a+b) const {
     return (2*a+2*b);
 }
 
+template<typename  Any=int, unsigned  pocet=10>
+class Pole
+{
+private:
+    Any *array;
+    unsigned  maxIndex;
+    unsigned  curIndex;
+    unsigned  numRealoc;
+
+public:
+    Pole();
+    ~Pole();//destruktor, uprace po sebe. Uvolni pointer a ho aj zakotvi teda priradí nulovy pointer
+    Pole(unsigned  kolko);
+    bool push(Any hodnota);
+    void printfPole() const;
+    Any operator[](unsigned  int index);
+};
+
+template<typename Any, unsigned int pocet>
+Pole<Any, pocet>::Pole() {
+    array= (Any *)std::malloc(pocet* sizeof(Any));
+    curIndex=0;
+    maxIndex=pocet-1;
+    numRealoc=1;
+
+}
+
+template<typename Any, unsigned int pocet>
+Pole<Any, pocet>::~Pole() {
+    free(array);
+    array= nullptr;
+
+}
+
+template<typename Any, unsigned int pocet>//urcim pocet prvkov aby sa dalo priamo
+Pole<Any, pocet>::Pole(unsigned int kolko) {
+    array= (Any *)std::malloc(kolko* sizeof(Any));
+    curIndex=0;
+    maxIndex=kolko-1;
+    numRealoc=1;
+}
+
+
+template<typename Any, unsigned int pocet>
+bool Pole<Any, pocet>::push(Any hodnota) {
+    if(curIndex<maxIndex)
+    {
+        array[curIndex]=hodnota;
+        curIndex++;
+        return  true;
+    }
+    numRealoc++;
+    Any * tmp=(Any *) realloc(array,numRealoc * maxIndex * sizeof (Any));
+    if(tmp==NULL)
+    {
+        return false;
+    }
+    array=tmp;
+    array[curIndex]=hodnota;
+    curIndex++;
+    maxIndex*=numRealoc;
+    return true;
+}
+
+template<typename Any, unsigned int pocet>
+void Pole<Any, pocet>::printfPole() const {
+    //nova syntax nefunguje s dynamickymi poliami
+    for(unsigned  i=0;i<curIndex;i++)
+    {
+        std::cout<<array[i]<<" ";
+    }
+}
+
+template<typename Any, unsigned int pocet>
+Any Pole<Any, pocet>::operator[](unsigned int index) {
+    return array[index];
+}
+
 #endif //SABOLNY_TRIED_SABLONYTRIED_H
+/*
+                      / \                               //
+                     // \\                              //
+                    //   \\                             //
+                   // / \ \\                            //
+                  // // \\ \\                           //
+                 // //   \\ \\                          //
+                // // / \ \\ \\                         //
+               // // // \\ \\ \\                        //
+              // // //   \\ \\ \\                       //
+             // // // / \ \\ \\ \\                      //
+            // // // // \\ \\ \\ \\                     //
+           // // // //   \\ \\ \\ \\                    //
+          // // // // / \ \\ \\ \\ \\                   //
+         // // // // // \\ \\ \\ \\ \\                  //
+        // // // // //   \\ \\ \\ \\ \\                 //
+       // // // // // / \ \\ \\ \\ \\ \\                //
+      // // // // // // \\ \\ \\ \\ \\ \\               //
+     // // // // // //   \\ \\ \\ \\ \\ \\              //
+    // // // // // // / \ \\ \\ \\ \\ \\ \\             //
+   // // // // // // // \\ \\ \\ \\ \\ \\ \\            //
+  // // // // // // //   \\ \\ \\ \\ \\ \\ \\           //
+ // // // // // // // / \ \\ \\ \\ \\ \\ \\ \\          //
+// // // // // // // // \\ \\ \\ \\ \\ \\ \\ \\         //
+ */
