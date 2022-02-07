@@ -38,6 +38,15 @@ auto Obdlznik<Any,Other,pocet>::getObvod1() -> decltype(a+b) const {
 }
 
 template<typename  Any=int, unsigned  pocet=10>
+class Pole;
+
+template<typename T>
+int comp(const void * a, const void  *b);
+/*
+template<typename Any,unsigned  int pocet>
+std::ostream & operator;*/
+
+template<typename Any, unsigned pocet>
 class Pole
 {
 private:
@@ -53,6 +62,10 @@ public:
     bool push(Any hodnota);
     void printfPole() const;
     Any operator[](unsigned  int index);
+    //Any &operator[](unsigned  int index);
+    Any max() const;
+    Any min() const;
+
 };
 
 template<typename Any, unsigned int pocet>
